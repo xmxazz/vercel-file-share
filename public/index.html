@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>临时文件分享</title>
+    <style>
+        body{max-width:600px;margin:30px auto;font-size:18px}
+        .box{padding:20px;border:1px solid #ddd;margin:20px 0}
+        button{padding:10px 20px;margin-top:10px}
+        input{padding:8px;width:70%}
+    </style>
+</head>
+<body>
+    <h2>📤 上传文件</h2>
+    <div class="box">
+        <input type="file" id="file"><br>
+        <button onclick="upload()">上传并获取取件码</button>
+        <div id="upResult"></div>
+    </div>
+
+    <h2>📥 下载文件</h2>
+    <div class="box">
+        <input type="text" id="code" placeholder="输入6位取件码">
+        <button onclick="download()">下载</button>
+    </div>
+
+    <script>
+        async function upload(){
+            let file = document.getElementById('file').files[0]
+            let form = new FormData()
+            form.append('file', file)
+
+            let res = await fetch('/upload', {method:'POST', body:form})
+            let json = await res.json()
+            document.getElementById('upResult').innerHTML = "✅ 取件码：" + json.code
+        }
+
+        function download(){
+            let code = document.getElementById('code').value
+            window.open('/download/'+code)
+        }
+    </script>
+</body>
+</html>
